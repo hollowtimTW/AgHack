@@ -17,8 +17,20 @@ html {
   min-height: 100%;
 }
 
+html, body, #__next, main {
+  height: 100%;
+}
+
 body {
   margin-bottom: 60px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+  height: 100%;
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {

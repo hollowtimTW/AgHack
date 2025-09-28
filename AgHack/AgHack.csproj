@@ -9,6 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\lib\tailwindcss\**" />
+    <Content Remove="wwwroot\lib\tailwindcss\**" />
+    <EmbeddedResource Remove="wwwroot\lib\tailwindcss\**" />
+    <None Remove="wwwroot\lib\tailwindcss\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.9" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.4" />
