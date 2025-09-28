@@ -1,16 +1,23 @@
 using AgHack.Models;
+using AgHack.Services;
+using AgHack.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSqlServer<AgHackContext>(builder.Configuration.GetConnectionString("DefaultConnection"));
 
+// è¨»å†Š Repository å’Œ Service
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IWaterQualityService, WaterQualityService>();
+builder.Services.AddScoped<IIrrigationWaterService, IrrigationWaterService>();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// ²K¥[ API ±±¨î¾¹¤ä´©
+// ï¿½Kï¿½[ API ï¿½ï¿½ï¿½î¾¹ï¿½ä´©
 builder.Services.AddControllers();
 
-// ²K¥[ Swagger ªA°È
+// ï¿½Kï¿½[ Swagger ï¿½Aï¿½ï¿½
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -18,7 +25,7 @@ builder.Services.AddSwaggerGen(c =>
     {
         Title = "AgHack API",
         Version = "v1",
-        Description = "¹A·~¤ô½èºÊ´ú¨t²Î API ¤å¥ó",
+        Description = "ï¿½Aï¿½~ï¿½ï¿½ï¿½ï¿½Ê´ï¿½ï¿½tï¿½ï¿½ API ï¿½ï¿½ï¿½",
         Contact = new Microsoft.OpenApi.Models.OpenApiContact
         {
             Name = "AgHack Team",
@@ -26,29 +33,29 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 
-    // ¬°¤£¦Pªº API ¤À²Õ
+    // ï¿½ï¿½ï¿½ï¿½ï¿½Pï¿½ï¿½ API ï¿½ï¿½ï¿½ï¿½
     c.TagActionsBy(api => new[] 
     {
         api.ActionDescriptor.RouteValues["controller"] switch
         {
-            "WaterQualityApi" => "¤ô½èºÊ´ú API",
-            "GroundwaterApi" => "¦a¤U¤ôºÊ´ú API", 
-            "IndustrialWastewaterApi" => "¤u·~¼o¤ôºÊ´ú API",
-            "ReferenceApi" => "°Ñ¦Ò¸ê®Æ API",
-            "SearchApi" => "·j´M¬d¸ß API",
-            _ => api.ActionDescriptor.RouteValues["controller"] ?? "¥¼¤ÀÃş"
+            "WaterQualityApi" => "ï¿½ï¿½ï¿½ï¿½Ê´ï¿½ API",
+            "GroundwaterApi" => "ï¿½aï¿½Uï¿½ï¿½ï¿½Ê´ï¿½ API", 
+            "IrrigationWaterApi" => "çŒæº‰æ°´è³ªç›£æ¸¬ API",
+            "ReferenceApi" => "ï¿½Ñ¦Ò¸ï¿½ï¿½ API",
+            "SearchApi" => "ï¿½jï¿½Mï¿½dï¿½ï¿½ API",
+            _ => api.ActionDescriptor.RouteValues["controller"] ?? "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"
         }
     });
 
     c.DocInclusionPredicate((name, api) => true);
 
-    // ±Ò¥Î XML µù¸Ñ¤ä´© (¦pªG»İ­n)
+    // ï¿½Ò¥ï¿½ XML ï¿½ï¿½ï¿½Ñ¤ä´© (ï¿½pï¿½Gï¿½İ­n)
     // var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     // var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     // c.IncludeXmlComments(xmlPath);
 });
 
-// ²K¥[ CORS ¤ä´© (¦pªG»İ­n«eºİ©I¥s API)
+// ï¿½Kï¿½[ CORS ï¿½ä´© (ï¿½pï¿½Gï¿½İ­nï¿½eï¿½İ©Iï¿½s API)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", builder =>
@@ -70,22 +77,26 @@ if (!app.Environment.IsDevelopment())
 }
 else
 {
-    // ¥u¦b¶}µoÀô¹Ò±Ò¥Î Swagger
+    // ï¿½uï¿½bï¿½}ï¿½oï¿½ï¿½ï¿½Ò±Ò¥ï¿½ Swagger
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "AgHack API v1");
-        c.RoutePrefix = "swagger"; // ³]©w Swagger UI ªº¸ô®|¬° /swagger
-        c.DocumentTitle = "AgHack API ¤å¥ó";
-        c.DefaultModelsExpandDepth(-1); // ÁôÂÃ Models °Ï¶ô
-        c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.List); // ¹w³]®i¶}¤è¦¡
+        c.RoutePrefix = "swagger"; // ï¿½]ï¿½w Swagger UI ï¿½ï¿½ï¿½ï¿½ï¿½|ï¿½ï¿½ /swagger
+        c.DocumentTitle = "AgHack API ï¿½ï¿½ï¿½";
+        c.DefaultModelsExpandDepth(-1); // ï¿½ï¿½ï¿½ï¿½ Models ï¿½Ï¶ï¿½
+        c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.List); // ï¿½wï¿½]ï¿½iï¿½}ï¿½è¦¡
     });
 }
 
 app.UseHttpsRedirection();
+
+// ä½¿ç”¨å…¨åŸŸç•°å¸¸è™•ç†ä¸­é–“ä»¶
+app.UseGlobalExceptionHandler();
+
 app.UseRouting();
 
-// ¨Ï¥Î CORS
+// ï¿½Ï¥ï¿½ CORS
 app.UseCors("AllowAll");
 
 app.UseAuthorization();
@@ -97,21 +108,21 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
-// ²K¥[ API ¸ô¥Ñ
+// ï¿½Kï¿½[ API ï¿½ï¿½ï¿½ï¿½
 app.MapControllers();
 
-// ´ú¸Õ¸ê®Æ®w³s½u
+// ï¿½ï¿½ï¿½Õ¸ï¿½Æ®wï¿½sï¿½u
 //using (var scope = app.Services.CreateScope())
 //{
 //    var db = scope.ServiceProvider.GetRequiredService<AgHackContext>();
 //    try
 //    {
 //        db.Database.CanConnect();
-//        Console.WriteLine("¸ê®Æ®w³s½u¦¨¥\¡I");
+//        Console.WriteLine("ï¿½ï¿½Æ®wï¿½sï¿½uï¿½ï¿½ï¿½\ï¿½I");
 //    }
 //    catch (Exception ex)
 //    {
-//        Console.WriteLine($"¸ê®Æ®w³s½u¥¢±Ñ: {ex.Message}");
+//        Console.WriteLine($"ï¿½ï¿½Æ®wï¿½sï¿½uï¿½ï¿½ï¿½ï¿½: {ex.Message}");
 //    }
 //}
 
