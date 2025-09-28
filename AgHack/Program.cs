@@ -14,10 +14,10 @@ builder.Services.AddScoped<IIrrigationWaterService, IrrigationWaterService>();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// �K�[ API ����䴩
+// 加入 API 控制器註冊
 builder.Services.AddControllers();
 
-// �K�[ Swagger �A��
+// 加入 Swagger 支援
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -25,7 +25,7 @@ builder.Services.AddSwaggerGen(c =>
     {
         Title = "AgHack API",
         Version = "v1",
-        Description = "�A�~����ʴ��t�� API ���",
+        Description = "農業資料平台 API 文件",
         Contact = new Microsoft.OpenApi.Models.OpenApiContact
         {
             Name = "AgHack Team",
@@ -33,29 +33,29 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 
-    // �����P�� API ����
-    c.TagActionsBy(api => new[] 
+    // 設定分組 API 標籤
+    c.TagActionsBy(api => new[]
     {
         api.ActionDescriptor.RouteValues["controller"] switch
         {
-            "WaterQualityApi" => "����ʴ� API",
-            "GroundwaterApi" => "�a�U���ʴ� API", 
+            "WaterQualityApi" => "水質監測 API",
+            "GroundwaterApi" => "地下水監測 API",
             "IrrigationWaterApi" => "灌溉水質監測 API",
-            "ReferenceApi" => "�ѦҸ�� API",
-            "SearchApi" => "�j�M�d�� API",
-            _ => api.ActionDescriptor.RouteValues["controller"] ?? "������"
+            "ReferenceApi" => "參考資料 API",
+            "SearchApi" => "搜尋查詢 API",
+            _ => api.ActionDescriptor.RouteValues["controller"] ?? "未分類"
         }
     });
 
     c.DocInclusionPredicate((name, api) => true);
 
-    // �ҥ� XML ���Ѥ䴩 (�p�G�ݭn)
+    // 加入 XML 文件註解（如有需要）
     // var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     // var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     // c.IncludeXmlComments(xmlPath);
 });
 
-// �K�[ CORS �䴩 (�p�G�ݭn�e�ݩI�s API)
+// 加入 CORS 設定（如需跨域存取 API）
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", builder =>
@@ -77,15 +77,15 @@ if (!app.Environment.IsDevelopment())
 }
 else
 {
-    // �u�b�}�o���ұҥ� Swagger
+    // 開發環境啟用 Swagger
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "AgHack API v1");
-        c.RoutePrefix = "swagger"; // �]�w Swagger UI �����|�� /swagger
-        c.DocumentTitle = "AgHack API ���";
-        c.DefaultModelsExpandDepth(-1); // ���� Models �϶�
-        c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.List); // �w�]�i�}�覡
+        c.RoutePrefix = "swagger"; // 設定 Swagger UI 路徑為 /swagger
+        c.DocumentTitle = "AgHack API 文件";
+        c.DefaultModelsExpandDepth(-1); // 隱藏 Models 區塊
+        c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.List); // 預設展開方式
     });
 }
 
@@ -96,7 +96,7 @@ app.UseGlobalExceptionHandler();
 
 app.UseRouting();
 
-// �ϥ� CORS
+// 啟用 CORS
 app.UseCors("AllowAll");
 
 app.UseAuthorization();
@@ -108,21 +108,21 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
-// �K�[ API ����
+// 加入 API 路由
 app.MapControllers();
 
-// ���ո�Ʈw�s�u
+// 資料庫連線測試（如有需要）
 //using (var scope = app.Services.CreateScope())
 //{
 //    var db = scope.ServiceProvider.GetRequiredService<AgHackContext>();
 //    try
 //    {
 //        db.Database.CanConnect();
-//        Console.WriteLine("��Ʈw�s�u���\�I");
+//        Console.WriteLine("資料庫連線成功！");
 //    }
 //    catch (Exception ex)
 //    {
-//        Console.WriteLine($"��Ʈw�s�u����: {ex.Message}");
+//        Console.WriteLine($"資料庫連線失敗: {ex.Message}");
 //    }
 //}
 
