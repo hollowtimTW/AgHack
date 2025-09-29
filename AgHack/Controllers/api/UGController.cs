@@ -31,6 +31,7 @@ namespace AgHack.Controllers.api
                 .Select(st => new
                 {
                     st.StId,
+                    st.SiteId,
                     st.SiteName,
                     st.TWD97Lat,
                     st.TWD97Lon
@@ -40,6 +41,56 @@ namespace AgHack.Controllers.api
             return Ok(result);
         }
 
+        /// <summary>
+        /// 取得某測站最新日期的所有監測紀錄
+        /// </summary>
+        [HttpGet("GetLatestRecordsById/{stId}")]
+        public async Task<IActionResult> GetLatestRecordsById(int stId)
+        {
+            var stInfo = await _context.UG_Sts
+                .AsNoTracking()
+                .Where(st => st.StId == stId && st.StatusOfUse == 1)
+                .Select(st => new
+                {
+                    st.StId,
+                    st.SiteId,
+                    st.SiteName,
+                    st.SiteEngName,
+                    st.UGWDistName,
+                    st.SiteAddress
+                })
+                .FirstOrDefaultAsync();
 
+            var latestDate = await _context.UG_Records
+                  .AsNoTracking()
+                  .Where(record => record.StId == stId)
+                  .MaxAsync(record => record.SampleDate.Date);
+
+            var latestRecords = await _context.UG_Records
+                .AsNoTracking()
+                .Include(s => s.Item)
+                .Where(record => record.StId == stId && record.SampleDate.Date == latestDate)
+                .OrderBy(p => p.Item.ItemId)
+                .Select(p => new
+                {
+                    p.Item.ItemName,
+                    p.Item.ItemEngabbreviation,
+                    p.ItemValue,
+                    p.Item.ItemUnit
+                })
+                .ToListAsync();
+
+            if (latestRecords == null || !latestRecords.Any())
+            {
+                return NotFound("No records found.");
+            }
+
+            return Ok(new
+            {
+                StInfo = stInfo,
+                SampleDate = latestDate.ToString("yyyy-MM-dd"),
+                Records = latestRecords
+            });
+        }
     }
 }

@@ -5,7 +5,7 @@ const mapConfig = {
     zoom: 8, // 初始縮放級別
     minZoom: 8, // 最小縮放級別
     maxZoom: 15, // 最大縮放級別
-    maxBounds: [[1, 120], [26, 122]], // 限制地圖範圍
+    maxBounds: [[21, 120], [26, 122]], // 限制地圖範圍
     attributionControl: true // 顯示版權資訊
 
 }
