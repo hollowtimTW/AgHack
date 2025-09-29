@@ -10,17 +10,6 @@ builder.Services.AddControllersWithViews();
 // 加入 API 控制器註冊
 builder.Services.AddControllers();
 
-// 加入 CORS 設定（如需跨域存取 API）
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", builder =>
-    {
-        builder.AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader();
-    });
-});
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -32,7 +21,6 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 
 app.UseRouting();
 
