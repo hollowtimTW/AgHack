@@ -66,13 +66,14 @@ function GetUGStById(stId) {
     fetch(`/api/UG/GetLatestRecordsById/${stId}`)
         .then(response => response.json())
         .then(data => {
+            console.log(data);
             // 添加測站資訊
             let analysisContent = `
                 <div class="border p-2 mb-2">
                     <h5 class="text-primary mb-2">測站資訊</h5>
                     <p><strong>測站名稱：</strong>${data.stInfo.siteName} (${data.stInfo.siteEngName})</p>
                     <p><strong>測站編號：</strong>${data.stInfo.siteId}</p>
-                    <p><strong>地下水分區名稱：</strong>${data.ugwDistName}</p>
+                    <p><strong>地下水分區：</strong>${data.stInfo.ugwDistName}</p>
                     <p><strong>測站地址：</strong>${data.stInfo.siteAddress}</p>
                     <p><strong>採集日期：</strong>${data.sampleDate}</p>
                     <button id="historyBtn" data-stid="${data.stInfo.stId}" class="btn btn-sm btn-outline-primary">歷史數據</button>
@@ -86,7 +87,7 @@ function GetUGStById(stId) {
                     <div class="border p-3 text-center" style="width: 150px;">
                         <div><strong>${record.itemName}</strong></div>
                         <div>(${record.itemEngabbreviation})</div>
-                        <div>${record.itemValue !== null ? record.itemValue : '-'}</div>
+                        <div class="rounded p-1 text-white" style="background-color: gray;">${record.itemValue !== null ? record.itemValue : '-'}</div>
                         <div>${record.itemUnit}</div>
                     </div>
                 `;
@@ -121,4 +122,8 @@ function GetUGStById(stId) {
         });
 }
 
+
+function ShowUGHisModal(stId) {
+
+}
 

@@ -7,6 +7,15 @@
         .leaflet-container {
             cursor: default !important; /* 將鼠標樣式設置為默認 */
         }
+
+        #historyRecordModal .modal-dialog {
+            max-width: 80%; /* 寬度占 80% */
+            height: 80%; /* 高度占 80% */
+        }
+
+        #historyRecordModal .modal-content {
+            height: 100%; /* 讓內容填滿高度 */
+        }
     </style>
 }
 
@@ -58,23 +67,23 @@
 </div>
 
 
-<!-- 歷史數據Modal -->
-<div class="modal fade" id="historyRecordModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">歷史數據</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                This is the content of the modal.
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
+<!-- Large Modal -->
+<div class="modal fade" id="historyRecordModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="historyRecordModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="historyRecordModalLabel">歷史數據</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div id="history-content" class="modal-body">
+        <!-- Modal Content Goes Here -->
+        @* <p>這裡是歷史數據的內容區域。</p> *@
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+      </div>
     </div>
+  </div>
 </div>
 
 
@@ -128,5 +137,12 @@
         LoadBasinLayer();
         LoadWQStLayer();
         LoadUGStLayer();
+
+        //  modal 關閉時清空modal內容
+        const historyRecordModal = document.getElementById('historyRecordModal');
+        historyRecordModal.addEventListener('hidden.bs.modal', function () {
+          const modalBody = historyRecordModal.querySelector('#history-content');
+          modalBody.innerHTML = '';
+        });
     </script>
 }

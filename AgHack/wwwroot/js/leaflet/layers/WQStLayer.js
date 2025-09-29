@@ -86,7 +86,7 @@ function GetWQStById(stId) {
                     <div class="border p-3 text-center" style="width: 150px;">
                         <div><strong>${record.itemName}</strong></div>
                         <div>(${record.itemEngabbreviation})</div>
-                        <div>${record.itemValue !== null ? record.itemValue : '-'}</div>
+                        <div class="rounded p-1 text-white" style="background-color: gray;">${record.itemValue !== null ? record.itemValue : '-'}</div>
                         <div>${record.itemUnit}</div>
                     </div>
                 `;
